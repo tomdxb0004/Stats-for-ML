@@ -1,0 +1,15 @@
+'Association between gender and travel destination - chi square test-'
+
+'H0-- there is no association between these two variables'
+'H1-There is an association'
+
+import statsmodels.api as sm
+from scipy import stats
+
+gender_destination_crosstab=pd.crosstab(index=df_train_wo_NDF['gender'],columns=df_train_wo_NDF['country_destination'])
+chi2,p,dof,expected=stats.chi2_contingency(gender_destination_crosstab)
+ 
+print('p value less than 0.05 is',(p<0.05))
+print(p)
+
+print('p value is less than 0.05, so null hypothesis is rejected means - significant association between age and destination')
