@@ -1,0 +1,39 @@
+cat_features=train.select_dtypes('object').columns
+def cramers_v(x, y):
+    confusion_matrix = pd.crosstab(x,y)
+    chi2 = stats.chi2_contingency(confusion_matrix)[0]
+    n = confusion_matrix.sum().sum()
+    phi2 = chi2/n
+    r,k = confusion_matrix.shape
+    phi2corr = max(0, phi2-((k-1)*(r-1))/(n-1))
+    rcorr = r-((r-1)**2)/(n-1)
+    kcorr = k-((k-1)**2)/(n-1)
+    return np.sqrt(phi2corr/min((kcorr-1),(rcorr-1)))
+table=pd.DataFrame(columns=cat_features,index=cat_features )
+
+for i,cat_feature in  enumerate(cat_features):
+   
+    for k in range(len(cat_features)):
+        
+        try:
+
+            print('relation between',cat_features[i],'and',cat_features[k])
+
+            corr=cramers_v(df[cat_features[i]],df[cat_features[k]]) 
+
+            t=cat_features[i]
+            s=cat_features[k]
+
+            print(' =  ', corr)
+            table[t][s] =corr
+            
+        except:
+            
+            t=cat_features[i]
+            s=cat_features[k]
+            
+            print('No correlation between ',t, ' and ',s)
+
+table.drop(columns=['id'],inplace=True)
+table.drop(index=['id'],inplace=True)
+sns.heatmap(table[table.columns].astype(float)*100,cmap='BuPu',annot=True)
