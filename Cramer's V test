@@ -1,4 +1,5 @@
 cat_features=train.select_dtypes('object').columns
+from scipy import stats
 def cramers_v(x, y):
     confusion_matrix = pd.crosstab(x,y)
     chi2 = stats.chi2_contingency(confusion_matrix)[0]
